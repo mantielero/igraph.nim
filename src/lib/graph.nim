@@ -1,5 +1,5 @@
 import ../wrapper/igraph_wrapper
-
+import basic_interface
 
 converter toOther*(data:seq[int]):igraph_vector_int_t =
   var tmp:igraph_vector_int_t
@@ -89,19 +89,7 @@ proc whichMax*(data:VectorInt):int =
 # ------------------------------------
 # https://igraph.org/c/html/latest/igraph-Basic.html#graph-constructors-and-destructors
 
-type
-  GraphObj* = object 
-    handle*:igrapht
-  Graph* = ref GraphObj
-  #DirectedType = enumigraphidirectedt
 
-let
-  directed*   = Igraphdirected
-  undirected* = Igraphundirected
-
-proc `=destroy`*(g:GraphObj) =
-  # https://igraph.org/c/html/latest/igraph-Basic.html#igraph_destroy
-  igraph_destroy(g.handle.addr)
 
 proc createUndirected*(edges:seq[int]; n:int = 0):Graph =
   # https://igraph.org/c/doc/igraph-Generators.html#igraph_create
@@ -117,12 +105,7 @@ proc createUndirected*(edges:seq[int]; n:int = 0):Graph =
 
 
 
-proc newGraph*(nVertices:int; directed:enumigraphidirectedt):Graph =
-  # https://igraph.org/c/html/latest/igraph-Basic.html#igraph_empty
-  result = new Graph  
-  var ret = igraph_empty(result.handle.addr, nVertices, directed)
-  if ret != Igraphsuccess:
-    raise newException(ValueError, "failed" ) # igrapherrort  
+
 
 
 # TODO: https://igraph.org/c/html/latest/igraph-Basic.html#igraph_empty_attrs
