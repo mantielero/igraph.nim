@@ -1,5 +1,5 @@
 import ../wrapper/igraph_wrapper
-import basic_interface, defs
+import defs, graph
 # Chapter 9. Graph generators
 # https://igraph.org/c/doc/igraph-Generators.html
 
