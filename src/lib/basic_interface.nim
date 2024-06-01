@@ -72,13 +72,16 @@ proc other*(g:Graph; eid,vid:int):int =
 
 
 # 4.2.8. igraph_get_eid — Get the edge id from the end points of an edge.
-
+proc getEid*(g:Graph;source,dest:int; directed:bool):int =
 # TODO: https://igraph.org/c/html/latest/igraph-Basic.html#igraph_get_eid
-#[
-igraph_error_t igraph_get_eid(const igraph_t *graph, igraph_integer_t *eid,
-                   igraph_integer_t from, igraph_integer_t to,
-                   igraph_bool_t directed, igraph_bool_t error);
-]#
+  var eid:igraph_integer_t
+  var error:igraph_bool_t
+  var ret = igraph_get_eid(g.handle.addr, eid.addr,
+                           source, dest,
+                           directed, error)
+
+  return eid.int
+
 
 # 4.2.9. igraph_get_eids — Return edge ids based on the adjacent vertices.
 
