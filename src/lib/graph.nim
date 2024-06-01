@@ -7,6 +7,11 @@ type
   Graph* = ref GraphObj
   #DirectedType = enumigraphidirectedt
 
+# ---------------------------------------
+# 4.1. Graph constructors and destructors
+# ---------------------------------------
+# https://igraph.org/c/html/latest/igraph-Basic.html#graph-constructors-and-destructors
+
 
 # 4.1.4. igraph_destroy — Frees the memory allocated for a graph object.
 proc `=destroy`*(g:GraphObj) =

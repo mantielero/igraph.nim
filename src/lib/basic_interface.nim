@@ -5,12 +5,7 @@ import defs, graph, data_structures
 # ===============
 # https://igraph.org/c/html/latest/igraph-Basic.html#basic-interface
 
-
-# ---------------------------------------
-# 4.1. Graph constructors and destructors
-# ---------------------------------------
-# https://igraph.org/c/html/latest/igraph-Basic.html#graph-constructors-and-destructors
-
+# see graph.nim
 
 # ---------------------------
 # 4.2. Basic query operations
@@ -23,14 +18,9 @@ proc vCount*(g:Graph):int =
   (igraph_vcount(g.handle.addr)).int
 
 # 4.2.2. igraph_ecount — The number of edges in a graph.
-
 proc eCount*(g:Graph):int =
   # https://igraph.org/c/html/latest/igraph-Basic.html#igraph_ecount
   (igraph_ecount(g.handle.addr)).int
-
-
-
-
 
 # 4.2.3. igraph_edge — Gives the head and tail vertices of an edge.
 proc edge*(g:Graph; edgeId:int):tuple[a,b:int] =
@@ -45,21 +35,41 @@ proc edge*(g:Graph; edgeId:int):tuple[a,b:int] =
   return (a.int, b.int)
 
 # 4.2.4. igraph_edges — Gives the head and tail vertices of a series of edges.
-
 # TODO: https://igraph.org/c/html/latest/igraph-Basic.html#igraph_edges
 # igraph_error_t igraph_edges(const igraph_t *graph, igraph_es_t eids, igraph_vector_int_t *edges);
 
 # 4.2.5. IGRAPH_FROM — The source vertex of an edge.
+#[
+igraph_interface.h:
+  #define IGRAPH_FROM(graph,eid) ((igraph_integer_t)(VECTOR((graph)->from)[(igraph_integer_t)(eid)]))
+]#
+proc `from`*(g:Graph; eid:int):int =  # maybe better to call "source"
+  # TODO: https://igraph.org/c/html/latest/igraph-Basic.html#IGRAPH_FROM
+  # #define VECTOR(v) ((v).stor_begin)
+  #((igraph_integer_t)(VECTOR((graph)->from)[(igraph_integer_t)(eid)]))
+  var v = cast[ptr UncheckedArray[int]](g.handle.fromfield.stor_begin)
+  return v[eid]
 
-# TODO: https://igraph.org/c/html/latest/igraph-Basic.html#IGRAPH_FROM
 
 # 4.2.6. IGRAPH_TO — The target vertex of an edge.
-
-# TODO: https://igraph.org/c/html/latest/igraph-Basic.html#IGRAPH_TO
+proc to*(g:Graph; eid:int):int =  # maybe better to call "source"
+  # TODO: https://igraph.org/c/html/latest/igraph-Basic.html#IGRAPH_TO
+  # #define VECTOR(v) ((v).stor_begin)
+  # igraph_interface.h:#define IGRAPH_TO(graph,eid)   ((igraph_integer_t)(VECTOR((graph)->to)  [(igraph_integer_t)(eid)]))
+  var v = cast[ptr UncheckedArray[int]](g.handle.to.stor_begin)
+  return v[eid]
 
 # 4.2.7. IGRAPH_OTHER — The other endpoint of an edge.
+#[
+#define IGRAPH_OTHER(graph,eid,vid) \
+    ((igraph_integer_t)(IGRAPH_TO(graph,(eid))==(vid) ? IGRAPH_FROM((graph),(eid)) : IGRAPH_TO((graph),(eid))))
+]#
+proc other*(g:Graph; eid,vid:int):int =
+  # TODO: https://igraph.org/c/html/latest/igraph-Basic.html#IGRAPH_OTHER
+  if g.to(eid) == vid: # if `vid` is destination
+    return g.`from`(eid)
+  return g.to(eid)
 
-# TODO: https://igraph.org/c/html/latest/igraph-Basic.html#IGRAPH_OTHER
 
 # 4.2.8. igraph_get_eid — Get the edge id from the end points of an edge.
 
