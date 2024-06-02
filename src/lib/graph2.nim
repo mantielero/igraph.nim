@@ -8,7 +8,7 @@ import defs, graph
 proc createUndirected*(edges:seq[int]; n:int = 0):Graph =
   # https://igraph.org/c/doc/igraph-Generators.html#igraph_create
   result = new Graph
-  var tmp = edges.toOther()
+  var tmp = edges.toVectorViewInt()
   var ret = igraph_create(result.handle.addr, 
                           tmp.addr, 
                           n, 
@@ -47,35 +47,14 @@ proc seed*(r:Rng; seed:int) =
     raise newException(ValueError, "failed" ) # igrapherrort
 
 
-# Games
-# Depigraph_erdos_renyi_game - depricated
-proc erdosRenyiGameGnm*(vertices,edges:int; 
-      directed:enumigraphidirectedt;
-      loops:enumigraphloopst):Graph =
-  # https://igraph.org/c/doc/igraph-Generators.html#igraph_erdos_renyi_game_gnm
-  result = new Graph
-  var ret = igraph_erdos_renyi_game_gnm(result.handle.addr, # result[].addr 
-              vertices.igraphintegert, edges.igraphintegert, 
-              directed.igraphboolt, loops.igraphboolt)
-  if ret != Igraphsuccess:
-    raise newException(ValueError, "failed" ) # igrapherrort
-
-# 
-proc diameter*(g:Graph):float =
-  # https://igraph.org/c/doc/igraph-Structural.html#igraph_diameter
-  var diameter:cfloat
-  var ret3 = igraph_diameter(g.handle.addr, 
-                  cast[ptr igraphrealt](diameter.addr), 
-                  nil, nil, nil, nil, 
-                  IGRAPH_UNDIRECTED.igraphboolt,  
-                  true # unconn=
-                  )
-  if ret3 != Igraphsuccess:
-    raise newException(ValueError, "failed" ) # igrapherrort
-  return diameter.float
-
-
-
-
-
-                     
+# igraph_random.h:#define RNG_INTEGER(l,h) (igraph_rng_get_integer(igraph_rng_default(),(l),(h)))
+proc rngInteger*(l,h:int):int =
+  var rng = rngDefault()
+  var res = igraph_rng_get_integer(rng.handle, l.igraphintegert, h.igraphintegert)
+  return res.int
+  #return tmp.int
+#[
+proc igraphrnggetinteger*(rng: ptr igraphrngt; l: igraphintegert;
+                          h: igraphintegert): igraphintegert {.cdecl,
+    importc: "igraph_rng_get_integer".}
+]#
