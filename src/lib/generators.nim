@@ -16,6 +16,15 @@ import defs, graph
 # 1.6. igraph_sparse_weighted_adjacency — Creates a graph from a weighted sparse adjacency matrix.
 # 1.7. igraph_adjlist — Creates a graph from an adjacency list.
 # 1.8. igraph_star — Creates a star graph, every vertex connects only to the center.
+proc newStar*(n:int; mode:igraph_star_mode_t; center:int):Graph =
+  # https://igraph.org/c/doc/igraph-Generators.html#igraph_star
+  result = new Graph
+  var ret = igraph_star(result.handle.addr, n, 
+                        mode,
+                        center)
+  if ret != success:
+    raise newException(ValueError, "error")
+  
 # 1.9. igraph_wheel — Creates a wheel graph, a union of a star and a cycle graph.
 # 1.10. igraph_square_lattice — Arbitrary dimensional square lattices.
 # 1.11. igraph_triangular_lattice — A triangular lattice with the given shape.
