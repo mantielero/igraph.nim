@@ -73,7 +73,7 @@ proc other*(g:Graph; eid,vid:int):int =
 
 # 4.2.8. igraph_get_eid — Get the edge id from the end points of an edge.
 proc getEid*(g:Graph;source,dest:int; directed:enumigraphidirectedt, error:bool):int =
-# TODO: https://igraph.org/c/html/latest/igraph-Basic.html#igraph_get_eid
+# https://igraph.org/c/html/latest/igraph-Basic.html#igraph_get_eid
   var eid:igraph_integer_t
   var ret = igraph_get_eid(g.handle.addr, eid.addr,
                            source, dest,
@@ -84,13 +84,34 @@ proc getEid*(g:Graph;source,dest:int; directed:enumigraphidirectedt, error:bool)
 
 
 # 4.2.9. igraph_get_eids — Return edge ids based on the adjacent vertices.
-
+proc getEids*(g:Graph;pairs:seq[int]; 
+              directed:enumigraphidirectedt, 
+              error:bool):seq[int] =
 # TODO: https://igraph.org/c/html/latest/igraph-Basic.html#igraph_get_eids
-#[
-igraph_error_t igraph_get_eids(const igraph_t *graph, igraph_vector_int_t *eids,
-                    const igraph_vector_int_t *pairs,
-                    igraph_bool_t directed, igraph_bool_t error);
-]#
+  var eids:igraph_vector_int_t #= igraph_vector_int_t()
+  var ret = igraph_vector_int_init(eids.addr, 0)
+  if ret != Igraphsuccess:
+    raise newException(ValueError, "failed" ) # igrapherrort  
+  #echo "EIDS: ", eids.storbegin[]
+  var pairsView = pairs.toVectorViewInt()
+  #echo pairsView.storbegin[]
+  #echo pairsView.storend[]  
+  ret = igraph_get_eids(g.handle.addr, eids.addr,
+                            pairsView.addr,
+                            directed, error)
+  if ret != Igraphsuccess:
+    raise newException(ValueError, "failed" ) # igrapherrort
+  var vec = cast[ptr UncheckedArray[int]](eids.storbegin)  # TODO: I DON'T LIKE THIS APPROACH
+  #echo vec[0]
+  #echo vec[1]
+  var size = igraph_vector_int_size(eids.addr).int
+  result = newSeq[int](size)
+
+  for i in 0..<size:
+    result[i] = vec[i]
+
+
+
 
 # 4.2.10. igraph_get_eids_multi — Query edge ids based on their adjacent vertices, handle multiple edges.
 
@@ -157,7 +178,7 @@ proc addEdge*(g:Graph; a,b:int) =
 proc addEdges*(g:Graph; edges:seq[int]) =
   # https://igraph.org/c/html/latest/igraph-Basic.html#igraph_add_edges
   # const igraph_vector_int_t *edges
-  var tmp = edges.toOther()
+  var tmp = edges.toVectorViewInt()
   var ret = igraph_add_edges(g.handle.addr, tmp.addr, nil)
                      #void *attr)
   if ret != Igraphsuccess:
