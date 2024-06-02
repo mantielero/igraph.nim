@@ -1,4 +1,4 @@
-// gcc -I/usr/include/igraph -ligraph ex4_4_get_eid.c -o ex4_2_get_eid
+// gcc -I/usr/include/igraph -ligraph ex4_4_get_eid.c -o ex4_4_get_eid
 #include <igraph.h>
 
 int main(void) {
