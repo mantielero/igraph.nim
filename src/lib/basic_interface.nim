@@ -72,14 +72,14 @@ proc other*(g:Graph; eid,vid:int):int =
 
 
 # 4.2.8. igraph_get_eid — Get the edge id from the end points of an edge.
-proc getEid*(g:Graph;source,dest:int; directed:bool):int =
+proc getEid*(g:Graph;source,dest:int; directed:enumigraphidirectedt, error:bool):int =
 # TODO: https://igraph.org/c/html/latest/igraph-Basic.html#igraph_get_eid
   var eid:igraph_integer_t
-  var error:igraph_bool_t
   var ret = igraph_get_eid(g.handle.addr, eid.addr,
                            source, dest,
                            directed, error)
-
+  if ret != Igraphsuccess:
+    raise newException(ValueError, "failed" ) # igrapherrort   
   return eid.int
 
 
