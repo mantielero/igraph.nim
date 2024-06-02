@@ -28,7 +28,7 @@ proc `=copy`*(dest: var GraphObj; source: GraphObj) =
     `=destroy`(dest)
     wasMoved(dest)
     var ret = igraph_copy(dest.handle.addr, source.handle.addr)
-    if ret != success:
+    if ret != SUCCESS:
       raise newException(ValueError, "error")
     #dest.field = duplicateResource(source.field)
 

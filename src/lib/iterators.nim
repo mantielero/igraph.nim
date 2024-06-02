@@ -32,7 +32,7 @@ proc `=destroy`*(vs:VertexSelectorObj) =
 proc vsAll*():VertexSelector =
   result = new VertexSelector
   var ret = igraph_vs_all(result.handle.addr)
-  if ret != success:
+  if ret != SUCCESS:
     raise newException(ValueError, "error")
 
 
@@ -88,7 +88,7 @@ proc `=destroy`*(vit:VertexIteratorObj) =
 proc newVertexIterator*(g:Graph; vs:VertexSelector):VertexIterator =
   result = new VertexIterator
   var ret = igraph_vit_create(g.handle.addr, vs.handle, result.handle.addr)
-  if ret != success:
+  if ret != SUCCESS:
     raise newException(ValueError, "error")
 
 
@@ -142,6 +142,6 @@ proc size*(g:Graph; vs:VertexSelector):int =
   var tmp:igraph_integer_t
   var ret = igraph_vs_size(g.handle.addr, vs.handle.addr,
                    tmp.addr)
-  if ret != success:
+  if ret != SUCCESS:
     raise newException(ValueError, "error")                   
   return tmp.int
