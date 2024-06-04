@@ -124,12 +124,17 @@ igraph_error_t igraph_get_all_eids_between(
 ]#
 
 # 4.2.11. igraph_neighbors — Adjacent vertices to a vertex.
+proc neighbors*(g:Graph; pNode:int; mode:igraph_neimode_t):seq[int] =
+  # TODO: https://igraph.org/c/html/latest/igraph-Basic.html#igraph_neighbors
+  var neis:igraph_vector_int_t
+  var ret = igraph_vector_int_init(neis.addr, 0)
+  if ret != Igraphsuccess:
+    raise newException(ValueError, "failed" ) # igrapherrort
 
-# TODO: https://igraph.org/c/html/latest/igraph-Basic.html#igraph_neighbors
-#[
-igraph_error_t igraph_neighbors(const igraph_t *graph, igraph_vector_int_t *neis, igraph_integer_t pnode,
-        igraph_neimode_t mode);
-]#
+  ret = igraph_neighbors(g.handle.addr, neis.addr, pNode,
+                         mode);
+  if ret != Igraphsuccess:
+    raise newException(ValueError, "failed" ) # igrapherrort
 
 # 4.2.12. igraph_incident — Gives the incident edges of a vertex.
 
