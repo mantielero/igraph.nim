@@ -10,6 +10,20 @@ import defs, graph
 
 # 1.1. igraph_create — Creates a graph with the specified edges.
 # 1.2. igraph_small — Shorthand to create a small graph, giving the edges as arguments.
+proc newSmall*(n:int; directed:enumigraphidirectedt; values: varargs[int]):Graph =
+  # https://igraph.org/c/doc/igraph-Generators.html#igraph_small
+  result = new Graph
+  var tmp = newSeq[cint]() #@values
+  for i in values:
+    tmp &= i.cint
+  if tmp.len mod 2 == 0:
+    tmp &= -1.cint
+
+  var ret = igraph_small(result.handle.addr, n, directed.igraph_bool_t, tmp) # [])
+  if ret != SUCCESS:
+    raise newException(ValueError, "error")
+
+
 # 1.3. igraph_adjacency — Creates a graph from an adjacency matrix.
 # 1.4. igraph_weighted_adjacency — Creates a graph from a weighted adjacency matrix.
 # 1.5. igraph_sparse_adjacency — Creates a graph from a sparse adjacency matrix.

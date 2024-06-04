@@ -8,7 +8,7 @@ proc main =
   var rng = rngDefault()
   rng.seed(42)
 
-  var graph = erdosRenyiGameGnm(numVertices, numEdges, IGRAPH_UNDIRECTED, IGRAPH_NO_LOOPS)
+  var graph = newErdosRenyiGameGnm(numVertices, numEdges, IGRAPH_UNDIRECTED, IGRAPH_NO_LOOPS)
   var diameter = graph.diameter()
 
   var tmp = eCount(graph)
