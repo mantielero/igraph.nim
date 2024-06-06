@@ -1,5 +1,5 @@
 # igraph.nim
-iGraph bindings
+igraph bindings
 
 ## Info
 https://igraph.org/c/
