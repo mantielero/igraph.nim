@@ -1,5 +1,5 @@
 import ../wrapper/igraph_wrapper
-import defs, graph, data_structures
+import defs, graph, data_structures, vectors
 # ===============
 # Basic Interface
 # ===============
@@ -123,16 +123,13 @@ igraph_error_t igraph_get_all_eids_between(
 );
 ]#
 
-# 4.2.11. igraph_neighbors — Adjacent vertices to a vertex.
-proc neighbors*(g:Graph; pNode:int; mode:igraph_neimode_t):seq[int] =
-  # TODO: https://igraph.org/c/html/latest/igraph-Basic.html#igraph_neighbors
-  var neis:igraph_vector_int_t
-  var ret = igraph_vector_int_init(neis.addr, 0)
-  if ret != Igraphsuccess:
-    raise newException(ValueError, "failed" ) # igrapherrort
 
-  ret = igraph_neighbors(g.handle.addr, neis.addr, pNode,
-                         mode);
+# 4.2.11. igraph_neighbors — Adjacent vertices to a vertex.
+proc neighbors*(g:Graph; pNode:int; mode:igraph_neimode_t):VectorInt =
+  # https://igraph.org/c/html/latest/igraph-Basic.html#igraph_neighbors
+  result = newVectorInt(0)
+  var ret = igraph_neighbors(g.handle.addr, result.handle.addr, pNode,
+                             mode)                        
   if ret != Igraphsuccess:
     raise newException(ValueError, "failed" ) # igrapherrort
 
