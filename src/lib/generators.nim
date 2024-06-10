@@ -10,7 +10,7 @@ import defs, graph
 
 # 1.1. igraph_create — Creates a graph with the specified edges.
 # 1.2. igraph_small — Shorthand to create a small graph, giving the edges as arguments.
-proc newSmall*(n:int; directed:enumigraphidirectedt; values: varargs[int]):Graph =
+#[ proc newSmall*(n:int; directed:enumigraphidirectedt; values: varargs[int]):Graph =
   # https://igraph.org/c/doc/igraph-Generators.html#igraph_small
   result = new Graph
   var tmp = newSeq[cint]() #@values
@@ -21,9 +21,34 @@ proc newSmall*(n:int; directed:enumigraphidirectedt; values: varargs[int]):Graph
 
   var ret = igraph_small(result.handle.addr, n, directed.igraph_bool_t, tmp) # [])
   if ret != SUCCESS:
-    raise newException(ValueError, "error")
+    raise newException(ValueError, "error") ]#
 
+# https://github.com/igraph/igraph/blob/c0f15367e471ff6f93d73100de9eb4b37ecdbd05/src/constructors/basic_constructors.c#L136-L156
 
+#proc newSmall*(n:int; directed:enumigraphidirectedt; values: varargs[int]):Graph =
+#[
+igraph_error_t igraph_small(igraph_t *graph, igraph_integer_t n, igraph_bool_t directed,
+                            int first, ...) {
+    igraph_vector_int_t edges;
+    va_list ap;
+
+    IGRAPH_VECTOR_INT_INIT_FINALLY(&edges, 0);
+
+    va_start(ap, first);
+    int num = first;
+    while (num != -1) {
+        igraph_vector_int_push_back(&edges, num);
+        num = va_arg(ap, int);
+    }
+    va_end(ap);
+
+    IGRAPH_CHECK(igraph_create(graph, &edges, n, directed));
+
+    igraph_vector_int_destroy(&edges);
+    IGRAPH_FINALLY_CLEAN(1);
+    return IGRAPH_SUCCESS;
+}
+]#
 # 1.3. igraph_adjacency — Creates a graph from an adjacency matrix.
 # 1.4. igraph_weighted_adjacency — Creates a graph from a weighted adjacency matrix.
 # 1.5. igraph_sparse_adjacency — Creates a graph from a sparse adjacency matrix.
