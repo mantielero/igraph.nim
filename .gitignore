@@ -7,4 +7,6 @@ examples/*
 
 src/wrapper/*
 !src/wrapper/*.*
+
 src/stimulus/gen
+src/stimulus/prueba.yaml
