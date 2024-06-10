@@ -7,3 +7,4 @@ examples/*
 
 src/wrapper/*
 !src/wrapper/*.*
+src/stimulus/gen
