@@ -1,4 +1,8 @@
 // gcc -I/usr/include/igraph -ligraph ex4_6_neighbors.c -o ex4_6_neighbors
+// 2 3
+// 1 2
+// 1 2 2 3
+
 #include <igraph.h>
 
 int main(void) {
