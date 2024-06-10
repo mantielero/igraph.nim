@@ -1,5 +1,5 @@
 import ../wrapper/igraph_wrapper
-import defs, graph
+import defs, graph, basic_interface
 # Chapter 9. Graph generators
 # https://igraph.org/c/doc/igraph-Generators.html
 
@@ -10,18 +10,37 @@ import defs, graph
 
 # 1.1. igraph_create — Creates a graph with the specified edges.
 # 1.2. igraph_small — Shorthand to create a small graph, giving the edges as arguments.
-#[ proc newSmall*(n:int; directed:enumigraphidirectedt; values: varargs[int]):Graph =
+proc newSmall*(n:int; directed:enumigraphidirectedt; values: varargs[int]):Graph =
   # https://igraph.org/c/doc/igraph-Generators.html#igraph_small
-  result = new Graph
-  var tmp = newSeq[cint]() #@values
-  for i in values:
-    tmp &= i.cint
-  if tmp.len mod 2 == 0:
-    tmp &= -1.cint
+  result = newGraph(n, directed)
+  #var tmp = newSeq[cint]() #@values
+  if values.len mod 2 != 0:
+    raise newException(ValueError, "the number of 'values' should be even")
 
-  var ret = igraph_small(result.handle.addr, n, directed.igraph_bool_t, tmp) # [])
-  if ret != SUCCESS:
-    raise newException(ValueError, "error") ]#
+  for i in 0..(values.high / 2).int:
+    result.addEdge(values[i*2],values[i*2+1])
+
+
+#[
+    igraph_vector_int_t edges;
+    va_list ap;
+
+    IGRAPH_VECTOR_INT_INIT_FINALLY(&edges, 0);
+
+    va_start(ap, first);
+    int num = first;
+    while (num != -1) {
+        igraph_vector_int_push_back(&edges, num);
+        num = va_arg(ap, int);
+    }
+    va_end(ap);
+
+    IGRAPH_CHECK(igraph_create(graph, &edges, n, directed));
+
+    igraph_vector_int_destroy(&edges);
+    IGRAPH_FINALLY_CLEAN(1);
+    return IGRAPH_SUCCESS;
+]#
 
 # https://github.com/igraph/igraph/blob/c0f15367e471ff6f93d73100de9eb4b37ecdbd05/src/constructors/basic_constructors.c#L136-L156
 
