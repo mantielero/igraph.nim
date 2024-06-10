@@ -41,3 +41,16 @@ proc print*(v:VectorInt) =
 
 proc get*(v:VectorInt; n:int):int =
   igraphvectorintget(v.handle.addr, n).int
+
+proc sum*(v:VectorInt):int =
+  igraph_vector_int_sum(v.handle.addr).int
+
+
+proc `[]`*(v:VectorInt; n:int):int =
+  cast[ptr UncheckedArray[int]](v.handle.stor_begin)[n]
+
+proc `[]=`*(v:VectorInt; n,m:int) =
+  cast[ptr UncheckedArray[int]](v.handle.stor_begin)[n] = m
+
+proc vssVector*(v:VectorInt):igraphvst =
+  igraphvssvector(v.handle.addr)
