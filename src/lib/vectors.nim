@@ -21,3 +21,23 @@ proc newVectorInt*(size:int = 0):VectorInt =
   var res = igraph_vector_int_init(result.handle.addr, size)
   if res != SUCCESS:
     raise newException(ValueError, "error")
+
+proc capacity*(v:VectorInt):int =
+  igraph_vector_int_capacity(v.handle.addr).int
+
+proc max*(data:VectorInt):int = 
+  igraph_vector_int_max(data.handle.addr).int
+
+proc whichMax*(data:VectorInt):int = 
+  igraph_vector_int_which_max(data.handle.addr).int
+
+proc sort*(v:VectorInt) =
+  igraph_vector_int_sort(v.handle.addr)
+
+proc print*(v:VectorInt) =
+  var res = igraph_vector_int_print(v.handle.addr)
+  if res != SUCCESS:
+    raise newException(ValueError, "error")
+
+proc get*(v:VectorInt; n:int):int =
+  igraphvectorintget(v.handle.addr, n).int
