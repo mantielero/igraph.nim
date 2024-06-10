@@ -1,5 +1,6 @@
 import ../wrapper/igraph_wrapper
 import defs,graph
+import std/strformat
 
 # ===========================================
 # Chapter 13. Structural properties of graphs
@@ -104,7 +105,39 @@ igraph_error_t igraph_diameter(const igraph_t *graph, igraph_real_t *res,
 # 7. Local scan statistics
 # 8. Graph components
 # 9. Degree sequences
+
+# -----------------------
 # 10. Centrality measures
+# -----------------------
+# https://igraph.org/c/doc/igraph-Structural.html#centrality-measures
+
+# 10.1. igraph_closeness — Closeness centrality calculations for some vertices.
+# 10.2. igraph_harmonic_centrality — Harmonic centrality for some vertices.
+# 10.3. igraph_betweenness — Betweenness centrality of some vertices.
+# 10.4. igraph_edge_betweenness — Betweenness centrality of the edges.
+# 10.5. igraph_pagerank_algo_t — PageRank algorithm implementation.
+# 10.6. igraph_pagerank — Calculates the Google PageRank for the specified vertices.
+# 10.7. igraph_personalized_pagerank — Calculates the personalized Google PageRank for the specified vertices.
+# 10.8. igraph_personalized_pagerank_vs — Calculates the personalized Google PageRank for the specified vertices.
+# 10.9. igraph_constraint — Burt's constraint scores.
+# 10.10. igraph_maxdegree — The maximum degree in a graph (or set of vertices).
+proc maxDegree*(graph:Graph; vids:igraphvst; mode:igraphneimodet; loops:enumigraphloopst):int =
+  # https://igraph.org/c/doc/igraph-Structural.html#igraph_maxdegree
+  var res:igraphintegert
+
+  var ret = igraph_maxdegree(graph.handle.addr, res.addr, vids, mode, loops.igraphboolt)
+  if ret != Igraphsuccess:
+    raise newException(ValueError, &"error while calling the function: {ret}")  
+  return (res.int)
+
+
+# 10.11. igraph_strength — Strength of the vertices, also called weighted vertex degree.
+# 10.12. igraph_eigenvector_centrality — Eigenvector centrality of the vertices.
+# 10.13. igraph_hub_and_authority_scores — Kleinberg's hub and authority scores (HITS).
+# 10.14. igraph_convergence_degree — Calculates the convergence degree of each edge in a graph.
+
+
+
 # 11. Range-limited centrality measures
 # 12. Subset-limited centrality measures
 # 13. Centralization
