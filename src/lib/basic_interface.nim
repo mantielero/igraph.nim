@@ -151,15 +151,19 @@ proc isDirected*(g:Graph):bool =
 
 
 # 4.2.15. igraph_degree — The degree of some vertices in a graph.
-proc degree*(g:Graph):VectorInt =
+proc degree*( g:Graph; vids:igraphvst = igraph_vss_all();
+              mode:igraph_neimode_t = IGRAPH_ALL; 
+              loops:enumigraphloopst = IGRAPH_LOOPS):VectorInt =
   # https://igraph.org/c/html/latest/igraph-Basic.html#igraph_degree
-  var tmp = newVectorInt()
-  var ret = igraph_degree(g.handle.addr, tmp.handle.addr, igraph_vss_all(), 
-                          IGRAPH_ALL, IGRAPH_LOOPS.igraphboolt)
+  result = newVectorInt()
+  var ret = igraph_degree(g.handle.addr, result.handle.addr, 
+                          vids, 
+                          mode, 
+                          loops.igraphboolt)
   #echo repr tmp
   if ret != Igraphsuccess:
     raise newException(ValueError, "failed" ) # igrapherrort   
-  return tmp
+  
 
 
 
