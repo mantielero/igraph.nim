@@ -3,16 +3,16 @@ import graph
 
 #----
 type
-  VectorIntObj* = object
-    handle*:igraphvectorintt
-  VectorInt* = ref VectorIntObj
+  # VectorIntObj* = object
+  #   handle*:igraphvectorintt
+  # VectorInt* = ref VectorIntObj
 
   VectorRealObj* = object
     handle*:igraphvectort
   VectorReal* = ref VectorRealObj
 
-proc `=destroy`*(v:VectorIntObj) =
-  igraph_vector_int_destroy(v.handle.addr)
+# proc `=destroy`*(v:VectorIntObj) =
+#   igraph_vector_int_destroy(v.handle.addr)
 
 proc `=destroy`*(v:VectorRealObj) =
   igraph_vector_destroy(v.handle.addr)
@@ -30,12 +30,12 @@ proc `=destroy`*(v:VectorRealObj) =
 
 
 
-proc newVectorInt*(size:int = 0):VectorInt =
-  # https://igraph.org/c/doc/igraph-Data-structures.html#igraph_vector_init
-  result = new VectorInt
-  var ret = igraph_vector_int_init(result.handle.addr, size.igraph_integer_t)  
-  if ret != Igraphsuccess:
-    raise newException(ValueError, "failed" ) # igrapherrort   
+# proc newVectorInt*(size:int = 0):VectorInt =
+#   # https://igraph.org/c/doc/igraph-Data-structures.html#igraph_vector_init
+#   result = new VectorInt
+#   var ret = igraph_vector_int_init(result.handle.addr, size.igraph_integer_t)  
+#   if ret != Igraphsuccess:
+#     raise newException(ValueError, "failed" ) # igrapherrort   
 
 proc newVectorReal*(size:int = 0):VectorReal =
   result = new VectorReal
@@ -43,26 +43,6 @@ proc newVectorReal*(size:int = 0):VectorReal =
   var ret = igraph_vector_init(result.handle.addr, size.igraph_integer_t)  
   if ret != Igraphsuccess:
     raise newException(ValueError, "failed" ) # igrapherrort   
-
-
-# ----
-
-
-
-
-proc max*(data:VectorInt):int = 
-  igraph_vector_int_max(data.handle.addr).int
-
-proc whichMax*(data:VectorInt):int = 
-  igraph_vector_int_which_max(data.handle.addr).int
-
-
-#---------
-
-
-
-
-
 
 
 # -----
